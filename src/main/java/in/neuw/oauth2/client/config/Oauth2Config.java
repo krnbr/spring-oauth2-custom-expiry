@@ -62,11 +62,15 @@ class Oauth2Config implements InitializingBean {
 
     @Bean
     public WebClient webClientNotStandard(final @Value("${resource.base}") String resourceBase,
+                                          final @Value("${custom.expiry}") long expirySeconds,
                                           final ClientRegistrationRepository clientRegistrationRepository,
                                           final OAuth2AuthorizedClientRepository authorizedClientRepository) {
 
         var oauth2RegistrationId = "mock-not-standard";
-        var defaultClientCredentialsTokenResponseClient = new CustomClientCredentialsTokenResponseClient(3600, getRestTemplateForTokenEndPoint(oauth2RegistrationId));
+        var defaultClientCredentialsTokenResponseClient = new CustomClientCredentialsTokenResponseClient(
+                expirySeconds,
+                getRestTemplateForTokenEndPoint(oauth2RegistrationId)
+        );
 
         return getOauth2WebClient(
             resourceBase,

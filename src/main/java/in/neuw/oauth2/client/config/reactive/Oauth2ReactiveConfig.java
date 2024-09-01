@@ -8,7 +8,8 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplicat
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
-import org.springframework.security.oauth2.client.*;
+import org.springframework.security.oauth2.client.ReactiveOAuth2AuthorizedClientProvider;
+import org.springframework.security.oauth2.client.ReactiveOAuth2AuthorizedClientProviderBuilder;
 import org.springframework.security.oauth2.client.endpoint.WebClientReactiveClientCredentialsTokenResponseClient;
 import org.springframework.security.oauth2.client.registration.ReactiveClientRegistrationRepository;
 import org.springframework.security.oauth2.client.web.DefaultReactiveOAuth2AuthorizedClientManager;
@@ -63,6 +64,7 @@ class Oauth2ReactiveConfig implements InitializingBean {
 
     @Bean
     public WebClient webClientNotStandard(final @Value("${resource.base}") String resourceBase,
+                                          final @Value("${custom.expiry}") long expirySeconds,
                                           final ReactiveClientRegistrationRepository clientRegistrationRepository,
                                           final ServerOAuth2AuthorizedClientRepository authorizedClientRepository) {
         var oauth2RegistrationId = "mock-not-standard";
@@ -73,7 +75,7 @@ class Oauth2ReactiveConfig implements InitializingBean {
                 .build();
 
         var accessTokenResponseClient = new WebClientReactiveClientCredentialsTokenResponseClient();
-        accessTokenResponseClient.setBodyExtractor(new CustomOAuth2AccessTokenResponseBodyExtractor(3600));
+        accessTokenResponseClient.setBodyExtractor(new CustomOAuth2AccessTokenResponseBodyExtractor(expirySeconds));
         accessTokenResponseClient.setWebClient(tokenEndpointWebClient);
 
         ReactiveOAuth2AuthorizedClientProvider authorizedClientProvider = ReactiveOAuth2AuthorizedClientProviderBuilder
