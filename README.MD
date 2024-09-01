@@ -27,7 +27,7 @@ The Mocked downstream endpoints are included in `the in.neuw.oauth2.mock` packag
 ▸ Why mock within the main resource?
 ─ Since this is a POC(**P**roof Of **C**oncept), too many separate modules(microservice) would need extra time and mind to understand the situation. 
 
-The mocks has three endpoints :-
+The mocks have three endpoints :-
 
 ─ Resource Endpoint - /mock/apis/pong
 
